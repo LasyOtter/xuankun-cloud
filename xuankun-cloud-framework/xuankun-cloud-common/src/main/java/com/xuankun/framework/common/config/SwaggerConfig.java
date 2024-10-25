@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Swagger配置
  *
- * @author 阿沐  babamu@126.com
+ * @author Jimy  545631327@qq.com
  */
 @Configuration
 public class SwaggerConfig{
@@ -23,7 +23,7 @@ public class SwaggerConfig{
     public GroupedOpenApi userApi(){
         String[] paths = { "/**" };
         String[] packagedToMatch = { "com.xuankun" };
-        return GroupedOpenApi.builder().group("MakuCloud")
+        return GroupedOpenApi.builder().group("XuankunCloud")
                 .pathsToMatch(paths)
                 .packagesToScan(packagedToMatch).build();
     }
@@ -34,13 +34,11 @@ public class SwaggerConfig{
         contact.setName("Jimy");
 
         OpenAPI openapi = new OpenAPI().info(new Info()
-            .title("MakuCloud")
-            .description( "MakuCloud")
+            .title("XuankunCloud")
+            .description( "XuankunCloud")
             .contact(contact)
             .version("1.0")
-            .termsOfService("https://maku.net")
-            .license(new License().name("MIT")
-            .url("https://maku.net")));
+            .license(new License().name("MIT")));
 
         openapi.addSecurityItem(new SecurityRequirement().addList("api_key"))
             .components(new Components().addSecuritySchemes("api_key",

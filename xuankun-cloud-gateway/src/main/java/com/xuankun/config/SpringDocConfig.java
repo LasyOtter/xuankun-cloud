@@ -48,12 +48,10 @@ public class SpringDocConfig {
         contact.setName("Jimy");
 
         return new OpenAPI().info(new Info()
-            .title("MakuCloud")
-            .description( "MakuCloud")
+            .title("XuankunCloud")
+            .description( "XuankunCloud")
             .contact(contact)
             .version("1.0")
-            .termsOfService("https://maku.net")
-            .license(new License().name("MIT")
-            .url("https://maku.net")));
+            .license(new License().name("MIT")));
     }
 }

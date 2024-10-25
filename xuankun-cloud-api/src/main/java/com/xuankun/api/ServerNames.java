@@ -7,11 +7,11 @@ package com.xuankun.api;
  */
 public interface ServerNames {
     /**
-     * maku-cloud-system 服务名
+     * xuankun-cloud-system 服务名
      */
-    String SYSTEM_SERVER_NAME = "maku-cloud-system";
+    String SYSTEM_SERVER_NAME = "xuankun-cloud-system";
     /**
-     * maku-cloud-message 服务名
+     * xuankun-cloud-message 服务名
      */
-    String MESSAGE_SERVER_NAME = "maku-cloud-message";
+    String MESSAGE_SERVER_NAME = "xuankun-cloud-message";
 }
