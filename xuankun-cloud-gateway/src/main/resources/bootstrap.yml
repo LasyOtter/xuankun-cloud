@@ -1,0 +1,68 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: xuankun-cloud-gateway
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      metrics:
+        enabled: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: xuankun-cloud-system
+          uri: lb://xuankun-cloud-system
+          order: 1
+          predicates:
+            - Path=/sys/**
+          filters:
+            - StripPrefix=1
+        - id: xuankun-cloud-quartz
+          uri: lb://xuankun-cloud-quartz
+          order: 2
+          predicates:
+            - Path=/schedule/**
+          filters:
+            - StripPrefix=1
+        - id: xuankun-cloud-message
+          uri: lb://xuankun-cloud-message
+          order: 3
+          predicates:
+            - Path=/message/**
+          filters:
+            - StripPrefix=1
+        - id: xuankun-cloud-new
+          uri: lb://xuankun-cloud-new
+          order: 999
+          predicates:
+            - Path=/new/**
+          filters:
+            - StripPrefix=1
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+    nacos:
+      discovery:
+        server-addr: ${nacos_host:192.168.1.116}:${nacos_port:8848}
+        # 命名空间，默认：public
+        namespace: ${nacos_namespace:}
+        service: ${spring.application.name}
+
+springdoc:
+  swagger-ui:
+    path: doc.html
+
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
