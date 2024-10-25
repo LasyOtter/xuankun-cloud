@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: xuankun-cloud-system
+  flyway:
+    enabled: true
+    encoding: UTF-8
+    locations: db/migration
   profiles:
     active: dev
   cloud:
