@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.WfNodeConditionDao">
+
+    <resultMap type="com.xuankun.workorder.entity.WfNodeConditionEntity" id="wfNodeConditionMap">
+        <result property="id" column="id"/>
+        <result property="formId" column="form_id"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="columnId" column="column_id"/>
+        <result property="type" column="type"/>
+        <result property="optType" column="opt_type"/>
+        <result property="zdy1" column="zdy1"/>
+        <result property="zdy2" column="zdy2"/>
+        <result property="opt1" column="opt1"/>
+        <result property="opt2" column="opt2"/>
+        <result property="columnDbname" column="column_dbname"/>
+        <result property="columnType" column="column_type"/>
+        <result property="showType" column="show_type"/>
+        <result property="showName" column="show_name"/>
+        <result property="fixedDownBoxValue" column="fixed_down_box_value"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updator" column="updator"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <delete id="deletNodeConditionByFormId">
+        delete from wf_node_condition where form_id=#{formId}
+    </delete>
+</mapper>

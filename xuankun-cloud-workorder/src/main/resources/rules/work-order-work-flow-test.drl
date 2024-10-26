@@ -1,0 +1,174 @@
+package com.xuankun.workorder.rules
+
+import com.xuankun.workorder.dto.WoWorkFlowDTO;
+import com.xuankun.workorder.dto.WorkOrderApprovedDTO;
+import com.xuankun.workorder.dto.WoWorkFlowRecordDTO;
+import com.xuankun.workorder.enums.WorkOrderApprovalTypeEnum;
+import java.time.LocalDateTime;
+import com.xuankun.workorder.actions.WorkOrderRuleTbmaAction;
+import com.xuankun.workorder.enums.WorkOrderApprovalStateEnum;
+import com.xuankun.workorder.dto.OperationSchemeDTO
+import com.xuankun.workorder.dto.WoWorkFlowDTO
+import com.xuankun.workorder.dto.WoWorkFlowRecordDTO;
+
+global com.xuankun.workorder.service.WorkOrderService workOrderService;
+global com.xuankun.workorder.service.WoWorkFlowService woWorkFlowService;
+global com.xuankun.workorder.service.WoWorkFlowRecordService recordService;
+global LocalDateTime now;
+
+dialect "java"
+rule "1-待修改-提交"
+    when
+        dto : WorkOrderApprovedDTO(woState == WorkOrderApprovalStateEnum.TO_BE_MODIFY.value()
+        && orderApprovalTypeEnum == WorkOrderApprovalTypeEnum.APPROVAL.value())
+    then
+        WoWorkFlowDTO woWorkFlow = new WoWorkFlowDTO();
+        WoWorkFlowRecordDTO record = new WoWorkFlowRecordDTO();
+        now = LocalDateTime.now();
+        woWorkFlow.setWorkOrderId(dto.getWoId());
+        woWorkFlow.setWorkOrderCode(dto.getWoCode());
+        woWorkFlow.setState(WorkOrderApprovalStateEnum.TO_BE_APPLIED_FOR_APPROVAL.value());
+        woWorkFlow.setStateName(WorkOrderApprovalStateEnum.TO_BE_APPLIED_FOR_APPROVAL.enumName());
+        woWorkFlow.setCurStep(WorkOrderApprovalStateEnum.TO_BE_APPLIED_FOR_APPROVAL.value());
+        woWorkFlow.setNextStep(WorkOrderApprovalStateEnum.TO_BE_RECEIVED_ORDER.value());
+        woWorkFlow.setLastStep(dto.getWoState());
+        woWorkFlow.setExecuteTime(now);
+        woWorkFlow.setExecutorUserId(dto.getExecutorUserId());
+        woWorkFlow.setReason(dto.getReason());
+        woWorkFlow.setRemark(dto.getRemark());
+        woWorkFlowService.save(woWorkFlow);
+        WorkOrderRuleTbmaAction.logWoWorkFlow(woWorkFlow,drools.getRule());
+        record.setState(woWorkFlow.getState());
+        record.setOperationTime(now);
+        record.setStateName(woWorkFlow.getStateName());
+        record.setWorkOrderId(dto.getWoId());
+        record.setWorkOrderCode(dto.getWoCode());
+        record.setExecutorUserId(dto.getExecutorUserId());
+        record.setReason(dto.getReason());
+        record.setRemark(dto.getRemark());
+        recordService.save(record);
+        dto.setWoState(WorkOrderApprovalStateEnum.TO_BE_APPLIED_FOR_APPROVAL.value());
+        workOrderService.approvedWoState(dto);
+        WorkOrderRuleTbmaAction.logWoWorkFlowRecord(record,drools.getRule());
+        WorkOrderRuleTbmaAction.doParse(woWorkFlow,record);
+end
+
+rule "2-待申请审批-审批"
+    when
+        dto : WorkOrderApprovedDTO(woState == WorkOrderApprovalStateEnum.TO_BE_APPLIED_FOR_APPROVAL.value()
+        && orderApprovalTypeEnum == WorkOrderApprovalTypeEnum.APPROVAL.value())
+    then
+        WoWorkFlowDTO woWorkFlow = new WoWorkFlowDTO();
+        WoWorkFlowRecordDTO record = new WoWorkFlowRecordDTO();
+        now = LocalDateTime.now();
+        woWorkFlow.setWorkOrderId(dto.getWoId());
+        woWorkFlow.setWorkOrderCode(dto.getWoCode());
+        woWorkFlow.setState(WorkOrderApprovalStateEnum.TO_BE_RECEIVED_ORDER.value());
+        woWorkFlow.setStateName(WorkOrderApprovalStateEnum.TO_BE_RECEIVED_ORDER.enumName());
+        woWorkFlow.setCurStep(WorkOrderApprovalStateEnum.TO_BE_RECEIVED_ORDER.value());
+        woWorkFlow.setNextStep(WorkOrderApprovalStateEnum.TO_BE_FILLED_FORM.value());
+        woWorkFlow.setLastStep(dto.getWoState());
+        woWorkFlow.setExecuteTime(now);
+        woWorkFlow.setExecutorUserId(dto.getExecutorUserId());
+        woWorkFlow.setReason(dto.getReason());
+        woWorkFlow.setRemark(dto.getRemark());
+        woWorkFlowService.save(woWorkFlow);
+        WorkOrderRuleTbmaAction.logWoWorkFlow(woWorkFlow,drools.getRule());
+        record.setState(woWorkFlow.getState());
+        record.setOperationTime(now);
+        record.setStateName(woWorkFlow.getStateName());
+        record.setWorkOrderId(dto.getWoId());
+        record.setWorkOrderCode(dto.getWoCode());
+        record.setExecutorUserId(dto.getExecutorUserId());
+        record.setReason(dto.getReason());
+        record.setRemark(dto.getRemark());
+        recordService.save(record);
+        dto.setWoState(WorkOrderApprovalStateEnum.TO_BE_RECEIVED_ORDER.value());
+        workOrderService.approvedWoState(dto);
+        WorkOrderRuleTbmaAction.logWoWorkFlowRecord(record,drools.getRule());
+        WorkOrderRuleTbmaAction.doParse(woWorkFlow,record);
+end
+
+rule "3-待申请审批-驳回"
+    when
+        dto : WorkOrderApprovedDTO(woState == 1 && orderApprovalTypeEnum == WorkOrderApprovalTypeEnum.REJECT.value())
+    then
+        WoWorkFlowDTO woWorkFlow = new WoWorkFlowDTO();
+        WoWorkFlowRecordDTO record = new WoWorkFlowRecordDTO();
+        now = LocalDateTime.now();
+        woWorkFlow.setWorkOrderId(dto.getWoId());
+        woWorkFlow.setWorkOrderCode(dto.getWoCode());
+        woWorkFlow.setState(1);
+        woWorkFlow.setStateName("待申请审批");
+        woWorkFlow.setCurStep(1);
+        woWorkFlow.setNextStep(2);
+        woWorkFlow.setLastStep(0);
+        woWorkFlow.setExecuteTime(now);
+        woWorkFlow.setExecutorUserId(dto.getExecutorUserId());
+        if(null != dto.getReason()){
+            woWorkFlow.setReason(dto.getReason());
+        }
+        if(null != dto.getRemark()){
+            woWorkFlow.setRemark(dto.getRemark());
+        }
+        woWorkFlowService.save(woWorkFlow);
+        WorkOrderRuleTbmaAction.logWoWorkFlow(woWorkFlow,drools.getRule());
+        record.setState(woWorkFlow.getState());
+        record.setOperationTime(now);
+        record.setStateName("待申请审批");
+        record.setWorkOrderId(dto.getWoId());
+        record.setWorkOrderCode(dto.getWoCode());
+        record.setExecutorUserId(dto.getExecutorUserId());
+        if(null != dto.getReason()){
+            record.setReason(dto.getReason());
+        }
+        if(null != dto.getRemark()){
+            record.setRemark(dto.getRemark());
+        }
+        recordService.save(record);
+        dto.setWoState(WorkOrderApprovalStateEnum.TO_BE_RECEIVED_ORDER.value());
+        workOrderService.approvedWoState(dto);
+        WorkOrderRuleTbmaAction.logWoWorkFlowRecord(record,drools.getRule());
+        WorkOrderRuleTbmaAction.doParse(woWorkFlow,record);
+end
+
+rule "4-待申请审批-取消"
+    when
+        dto : WorkOrderApprovedDTO(woState == 1 && orderApprovalTypeEnum == WorkOrderApprovalTypeEnum.REJECT.value())
+    then
+        WoWorkFlowDTO woWorkFlow = new WoWorkFlowDTO();
+        WoWorkFlowRecordDTO record = new WoWorkFlowRecordDTO();
+        now = LocalDateTime.now();
+        woWorkFlow.setWorkOrderId(dto.getWoId());
+        woWorkFlow.setWorkOrderCode(dto.getWoCode());
+        woWorkFlow.setState(1);
+        woWorkFlow.setStateName("已取消");
+        woWorkFlow.setCurStep(1);
+        woWorkFlow.setNextStep(2);
+        woWorkFlow.setLastStep(0);
+        woWorkFlow.setExecuteTime(now);
+        woWorkFlow.setExecutorUserId(dto.getExecutorUserId());
+        if(null != dto.getReason()){
+            woWorkFlow.setReason(dto.getReason());
+        }
+        if(null != dto.getRemark()){
+            woWorkFlow.setRemark(dto.getRemark());
+        }
+        woWorkFlowService.save(woWorkFlow);
+        WorkOrderRuleTbmaAction.logWoWorkFlow(woWorkFlow,drools.getRule());
+        record.setState(woWorkFlow.getState());
+        record.setOperationTime(now);
+        record.setStateName("待申请审批");
+        record.setWorkOrderId(dto.getWoId());
+        record.setWorkOrderCode(dto.getWoCode());
+        record.setExecutorUserId(dto.getExecutorUserId());
+        if(null != dto.getReason()){
+            record.setReason(dto.getReason());
+        }
+        if(null != dto.getRemark()){
+            record.setRemark(dto.getRemark());
+        }
+        recordService.save(record);
+        WorkOrderRuleTbmaAction.logWoWorkFlowRecord(record,drools.getRule());
+        WorkOrderRuleTbmaAction.doParse(woWorkFlow,record);
+end

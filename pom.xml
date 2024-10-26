@@ -23,6 +23,7 @@
 		<module>xuankun-cloud-new</module>
 		<module>xuankun-cloud-system</module>
         <module>xuankun-cloud-gateway</module>
+        <module>xuankun-cloud-workorder</module>
     </modules>
 
     <properties>

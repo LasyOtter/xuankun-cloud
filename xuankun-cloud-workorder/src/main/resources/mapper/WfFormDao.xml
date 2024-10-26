@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.WfFormDao">
+
+    <resultMap type="com.xuankun.workorder.entity.WfFormEntity" id="wfFormMap">
+        <result property="formId" column="form_id"/>
+        <result property="processId" column="process_id"/>
+        <result property="formName" column="form_name"/>
+        <result property="content" column="content"/>
+        <result property="groupId" column="group_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="inCommonUse" column="in_common_use"/>
+    </resultMap>
+
+    <select id="getFormListByUserId" resultMap="wfFormMap">
+        SELECT
+        t1.form_id,
+        t1.process_id,
+        t1.form_name,
+        t1.content,
+        t1.group_id,
+        t1.remark
+        FROM
+        wf_form t1
+        where t1.del_flag = 0
+        and (EXISTS (select 1 from wf_form_user t2 where t1.form_id = t2.form_id
+        AND t2.type in (0,1) AND t2.del_flag = 0 AND t2.user_id IN
+        <foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        )
+        or EXISTS (select 1 from wf_form_user t2 where t1.form_id = t2.form_id
+        AND t2.type = 2 AND t2.del_flag = 0 AND t2.user_id IN
+        <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ))
+    </select>
+</mapper>

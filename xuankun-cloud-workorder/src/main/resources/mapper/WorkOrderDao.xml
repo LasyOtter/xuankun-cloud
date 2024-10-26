@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.WorkOrderDao">
+
+    <resultMap type="com.xuankun.workorder.dto.WorkOrderDTO" id="workOrderMap">
+        <result property="id" column="id"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="woDescription" column="wo_description"/>
+        <result property="woState" column="wo_state"/>
+        <result property="schemeId" column="scheme_id"/>
+        <result property="schemeName" column="scheme_name"/>
+        <result property="submissionTime" column="submission_time"/>
+        <result property="plannedExecutionTime" column="planned_execution_time"/>
+        <result property="executorRoleId" column="executor_role_id"/>
+        <result property="executorRole" column="executor_role"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifiedBy" column="Modified_by"/>
+        <result property="modifiedDate" column="Modified_date"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="schemeExtendInfo" column="scheme_extend_info"/>
+        <result property="executorOrgId" column="executor_org_id"/>
+        <result property="executorUserId" column="executor_user_id"/>
+        <result property="executorUser" column="executor_user"/>
+        <result property="executorOrgTypeId" column="executor_org_type_id"/>
+        <result property="executorOrgType" column="executor_org_type"/>
+        <result property="accepterUserId" column="accepter_user_id"/>
+        <result property="accepterUser" column="accepter_user"/>
+        <result property="projectId" column="project_id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="deviceId" column="project_id"/>
+        <result property="formId" column="form_id"/>
+        <result property="formName" column="form_name"/>
+        <result property="userId" column="userId"/>
+        <result property="isApproval" column="isApproval"/>
+        <result property="remarkIsRequired" column="remarkIsRequired"/>
+        <result property="orderState" column="orderState"/>
+        <result property="approvalId" column="approvalId"/>
+    </resultMap>
+
+    <resultMap type="com.xuankun.workorder.entity.WorkOrderEntity" id="workOrderDtoMap">
+        <result property="id" column="id"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="woDescription" column="wo_description"/>
+        <result property="woState" column="wo_state"/>
+        <result property="schemeId" column="scheme_id"/>
+        <result property="schemeName" column="scheme_name"/>
+        <result property="submissionTime" column="submission_time"/>
+        <result property="plannedExecutionTime" column="planned_execution_time"/>
+        <result property="executorRoleId" column="executor_role_id"/>
+        <result property="executorRole" column="executor_role"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifiedBy" column="Modified_by"/>
+        <result property="modifiedDate" column="Modified_date"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="schemeExtendInfo" column="scheme_extend_info"/>
+        <result property="executorOrgId" column="executor_org_id"/>
+        <result property="executorUserId" column="executor_user_id"/>
+        <result property="executorUser" column="executor_user"/>
+        <result property="executorOrgTypeId" column="executor_org_type_id"/>
+        <result property="executorOrgType" column="executor_org_type"/>
+        <result property="accepterUserId" column="accepter_user_id"/>
+        <result property="accepterUser" column="accepter_user"/>
+        <result property="projectId" column="project_id"/>
+        <result property="projectName" column="project_name"/>
+    </resultMap>
+
+    <update id="approvedWoState" parameterType="com.xuankun.workorder.dto.WorkOrderApprovedDTO">
+        update t_work_order
+        set wo_state = #{woState}
+        where id = #{id};
+    </update>
+
+<!--    <select id="selectSelfWorkOrder" resultMap="workOrderMap">-->
+<!--        select *-->
+<!--        from (select t.*,t1.userId-->
+<!--              from t_work_order t-->
+<!--              inner join t_user_role t1-->
+<!--              on t1.roleId = t.executor_role_id and t1.userId = t.executor_user_id-->
+<!--              inner join t_user t2 on t1.userId = t2.id-->
+<!--              union all-->
+<!--              select t.*,t1.userId-->
+<!--              from t_work_order t-->
+<!--              inner join t_operation_scheme t3 on t.scheme_id = t3.id-->
+<!--              inner join t_user_role t1-->
+<!--              on t1.roleId = t3.accepter_role_id and t1.userId = t.accepter_user_id-->
+<!--              inner join t_user t2 on t1.userId = t2.id-->
+<!--              union all-->
+<!--              select t.*,t1.userId from t_work_order t-->
+<!--              inner join t_operation_scheme t3 on t.scheme_id=t3.id-->
+<!--              inner join t_user_role t1 on t1.roleId=t3.first_approval_role_id-->
+<!--              union all-->
+<!--              select t.*,t1.userId from t_work_order t-->
+<!--              inner join t_operation_scheme t3 on t.scheme_id=t3.id-->
+<!--              inner join t_user_role t1 on t1.roleId=t3.second_approval_role_id-->
+<!--              union all-->
+<!--              select t.*,t1.userId from t_work_order t-->
+<!--              inner join t_operation_scheme t3 on t.scheme_id=t3.id-->
+<!--              inner join t_user_role t1 on t1.roleId=t3.third_approval_role_id-->
+<!--              ) t ${ew.customSqlSegment}-->
+<!--    </select>-->
+
+    <select id="selectSelfWorkOrder" resultMap="workOrderMap">
+        select * from (
+                          SELECT DISTINCT
+                              t1.*,
+                              CASE WHEN u.userId IS NULL THEN t2.role_id ELSE u.userId END AS userId,
+                              t2.is_approval AS isApproval,
+                              p.remark_is_required AS remarkIsRequired,
+                              t2.id as approvalId,
+                              concat( t2.role_name, '待审批' ) AS orderState
+                          FROM
+                              t_work_order t1
+                                  LEFT JOIN wf_process_user_approval t2 ON t1.form_id = t2.form_id
+                                  AND t1.id = t2.order_id AND t2.del_flag = 0
+                                  LEFT JOIN t_role r ON t2.role_name = r.`name`
+                                  LEFT JOIN t_user_role u ON u.roleId = r.id
+                                  LEFT JOIN wf_process_node p ON t2.form_id = p.form_id
+                                  AND t2.process_id = p.process_id
+                                  AND t2.node_id = p.id AND p.del_flag = 0
+                          WHERE
+                              t1.del_flag = 0
+                            AND t2.is_approval = 0
+                            AND t2.node_type = 1  UNION ALL
+                          SELECT DISTINCT
+                              t1.*,
+                              t2.user_id AS userId,
+                              t2.is_approval AS isApproval,
+                              p.remark_is_required AS remarkIsRequired,
+                              t2.id as approvalId,
+                              '已完成' AS orderState
+                          FROM
+                              t_work_order t1
+                                  LEFT JOIN wf_process_user_approval t2 ON t1.form_id = t2.form_id
+                                  AND t1.id = t2.order_id AND t2.del_flag = 0
+                                  LEFT JOIN wf_process_node p ON t2.form_id = p.form_id
+                                  AND t2.process_id = p.process_id
+                                  AND t2.node_id = p.id
+                                  AND p.del_flag = 0
+                          WHERE
+                              t1.del_flag = 0
+                            AND t2.is_approval = 1
+                            AND t1.wo_state = 2 UNION ALL
+                          SELECT DISTINCT
+                              t1.*,
+                              t2.user_id AS userId,
+                              2 AS isApproval,
+                              p.remark_is_required AS remarkIsRequired,
+                              t2.id as approvalId,
+                              '进行中' AS orderState
+                          FROM
+                              t_work_order t1
+                                  LEFT JOIN wf_process_user_approval t2 ON t1.form_id = t2.form_id
+                                  AND t1.id = t2.order_id AND t2.del_flag = 0
+                                  LEFT JOIN wf_process_node p ON t2.form_id = p.form_id
+                                  AND t2.process_id = p.process_id
+                                  AND t2.node_id = p.id AND p.del_flag = 0
+                          WHERE
+                              t1.del_flag = 0
+                            AND t2.operator_type in (0,1)
+                            and t2.node_type=0
+                            and t2.is_approval=1
+                            AND t1.wo_state != 2
+        ) t ${ew.customSqlSegment}
+    </select>
+</mapper>

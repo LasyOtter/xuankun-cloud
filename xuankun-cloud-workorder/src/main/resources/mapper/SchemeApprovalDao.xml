@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.SchemeApprovalDao">
+
+    <resultMap type="com.xuankun.workorder.entity.SchemeApprovalEntity" id="schemeApprovalMap">
+        <result property="id" column="id"/>
+        <result property="schemeId" column="scheme_id"/>
+        <result property="approvalState" column="approval_state"/>
+        <result property="firstReviewedBy" column="first_reviewed_by"/>
+        <result property="firstReviewedDate" column="first_reviewed_date"/>
+        <result property="secondReviewedBy" column="second_reviewed_by"/>
+        <result property="secondReviewedDate" column="second_reviewed_date"/>
+        <result property="thirdReviewedBy" column="third_reviewed_by"/>
+        <result property="thirdReviewedDate" column="third_reviewed_date"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifiedBy" column="Modified_by"/>
+        <result property="modifiedDate" column="Modified_date"/>
+        <result property="isDel" column="is_del"/>
+        <result property="nextStep" column="next_step"/>
+    </resultMap>
+
+
+</mapper>

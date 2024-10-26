@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.WfUserRoleDao">
+
+    <resultMap type="com.xuankun.workorder.entity.WfUserRoleEntity" id="wfUserRoleMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roleId" column="region_id"/>
+        <result property="regionId" column="role_id"/>
+        <result property="orgId" column="org_id"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updator" column="updator"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <select id="getRegionUserNames" resultType="java.util.Map">
+        select regionId,regionName,parentId,
+        <foreach collection="list" index="index" item="item" open=" " separator="," close=" ">
+            ${item}
+        </foreach>
+        from (
+        select t1.id as regionId,t1.region_name as regionName,t1.parent_id as parentId,
+        <foreach collection="list" index="index" item="item" open=" " separator="," close=" ">
+            max(case t4.role_name when '${item}' then t3.name else '' end) as '${item}'
+        </foreach>
+        from wf_region t1
+        LEFT JOIN wf_user_role t2 ON  t2.region_id=t1.id and t2.del_flag=0
+        LEFT JOIN t_user t3 ON t3.id = t2.user_id
+        LEFT JOIN wf_role t4 ON t2.role_id = t4.id and t4.del_flag=0
+        INNER JOIN wf_org_region t5 on t5.region_id=t1.id and t5.org_id=t2.org_id and t5.del_flag=0
+        where t1.del_flag=0 and t5.org_id=#{orgId}
+        group by t1.id,t1.region_name ) t
+    </select>
+    <select id="getRegionUserIds" resultType="java.util.Map">
+        select regionId,regionName,parentId,
+        <foreach collection="list" index="index" item="item" open=" " separator="," close=" ">
+            ${item}_id
+        </foreach>
+        from (
+        select t1.id as regionId,t1.region_name as regionName,t1.parent_id as parentId,
+        <foreach collection="list" index="index" item="item" open=" " separator="," close=" ">
+            max(case t4.role_name when '${item}' then t3.id else '' end) as '${item}_id'
+        </foreach>
+        from wf_region t1
+        LEFT JOIN wf_user_role t2 ON  t2.region_id=t1.id and t2.del_flag=0
+        LEFT JOIN t_user t3 ON t3.id = t2.user_id
+        LEFT JOIN wf_role t4 ON t2.role_id = t4.id and t4.del_flag=0
+        INNER JOIN wf_org_region t5 on t5.region_id=t1.id and t5.org_id=t2.org_id and t5.del_flag=0
+        where t1.del_flag=0 and t5.org_id=#{orgId}
+        group by t1.id,t1.region_name ) t
+    </select>
+</mapper>

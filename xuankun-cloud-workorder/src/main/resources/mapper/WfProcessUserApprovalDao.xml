@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.WfProcessUserApprovalDao">
+
+    <resultMap type="com.xuankun.workorder.entity.WfProcessUserApprovalEntity" id="wfProcessUserApprovalMap">
+        <result property="id" column="id"/>
+        <result property="processId" column="process_id"/>
+        <result property="formId" column="form_id"/>
+        <result property="parentNodeId" column="parent_node_id"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="isApproval" column="is_approval"/>
+        <result property="approvalState" column="approval_state"/>
+        <result property="approvalType" column="approval_type"/>
+        <result property="nodeType" column="node_type"/>
+        <result property="remark" column="remark"/>
+        <result property="nodeUserId" column="node_user_id"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updator" column="updator"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <resultMap id="processUserApprovalListMap" type="com.xuankun.workorder.dto.ProcessUserApprovalListDTO">
+        <result property="orderId" column="order_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="approvalState" column="approval_state"/>
+        <result property="approvalDate" column="approval_date"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="getApproveListByOrderId" resultMap="processUserApprovalListMap">
+        SELECT
+            t.order_id,
+            t.role_name,
+            case when t.approval_state = 0 then '已申请' when t.approval_state = 1 then '待审批' when t.approval_state = 2 then '已审批' end as approval_state,
+            t.remark,
+            t.update_date AS approval_date
+        FROM
+            wf_process_user_approval t
+        WHERE
+            t.order_id = #{orderId}
+    </select>
+</mapper>

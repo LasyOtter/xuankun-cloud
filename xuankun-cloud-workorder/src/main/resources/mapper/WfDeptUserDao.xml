@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.WfDeptUserDao">
+
+    <resultMap type="com.xuankun.workorder.entity.WfDeptUserEntity" id="wfDeptUserMap">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="regionId" column="role_id"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updator" column="updator"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <select id="getDeptUserList" resultMap="wfDeptUserMap">
+        select t1.* from wf_dept_user t1
+        inner join wf_dept t2 on t1.dept_id=t2.id
+         ${ew.customSqlSegment}
+    </select>
+
+    <select id="getAllDeptUserList" resultMap="wfDeptUserMap">
+        select t1.* from wf_dept_user t1
+        inner join wf_dept t2 on t1.dept_id=t2.id
+            ${ew.customSqlSegment}
+    </select>
+</mapper>

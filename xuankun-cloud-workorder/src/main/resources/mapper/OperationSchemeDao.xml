@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuankun.workorder.dao.OperationSchemeDao">
+
+    <resultMap type="com.xuankun.workorder.entity.OperationSchemeEntity" id="operationSchemeMap">
+        <result property="id" column="id"/>
+        <result property="schemeName" column="scheme_name"/>
+        <result property="operationType" column="operation_type"/>
+        <result property="schemeDescription" column="scheme_description"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="schemeGroupId" column="scheme_group_id"/>
+        <result property="schemeLllustration" column="scheme_lllustration"/>
+        <result property="organizationTypeId" column="organization_type_id"/>
+        <result property="organizationType" column="organization_type"/>
+        <result property="executorOfOrganizationId" column="executor_of_organization_id"/>
+        <result property="executorOfOrganization" column="executor_of_organization"/>
+        <result property="executorRole" column="executor_role"/>
+        <result property="productModelId" column="product_model_id"/>
+        <result property="productModel" column="product_model"/>
+        <result property="approvalLevel" column="approval_level"/>
+        <result property="firstOrgTypeId" column="first_org_type_id"/>
+        <result property="firstApprovalRoleId" column="first_approval_role_id"/>
+        <result property="firstOrganizationId" column="first_organization_id"/>
+        <result property="firstApprovalRole" column="first_approval_role"/>
+        <result property="secondOrgTypeId" column="second_org_type_id"/>
+        <result property="secondApprovalRoleId" column="second_approval_role_id"/>
+        <result property="secondOrganizationId" column="second_organization_id"/>
+        <result property="secondApprovalRole" column="second_approval_role"/>
+        <result property="thirdOrgTypeId" column="third_org_type_id"/>
+        <result property="thirdApprovalRoleId" column="third_approval_role_id"/>
+        <result property="thirdOrganizationId" column="third_organization_id"/>
+        <result property="thirdApprovalRole" column="third_approval_role"/>
+        <result property="approvalState" column="approval_state"/>
+        <result property="isCheck" column="is_check"/>
+        <result property="acceptanceMethod" column="acceptance_method"/>
+        <result property="autoAcceptanceSettings" column="auto_acceptance_settings"/>
+        <result property="enableCheme" column="enable_cheme"/>
+        <result property="effectiveDate" column="effective_date"/>
+        <result property="termOfValidity" column="term_of_validity"/>
+        <result property="modifiedBy" column="Modified_by"/>
+        <result property="modifiedDate" column="Modified_date"/>
+        <result property="isDel" column="is_del"/>
+        <result property="schemeExtendInfo" column="scheme_extend_info"/>
+        <result property="accepterOrgTypeId" column="accepter_org_type_id"/>
+        <result property="accepterOrgId" column="accepter_org_id"/>
+        <result property="accepterRoleId" column="accepter_role_id"/>
+        <result property="executorRoleId" column="executor_role_id"/>
+    </resultMap>
+
+    <resultMap type="com.xuankun.workorder.dto.OperationSchemeDTO" id="operationSchemeDtoMap">
+        <result property="id" column="id"/>
+        <result property="schemeName" column="scheme_name"/>
+        <result property="operationType" column="operation_type"/>
+        <result property="schemeDescription" column="scheme_description"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="schemeGroupId" column="scheme_group_id"/>
+        <result property="schemeLllustration" column="scheme_lllustration"/>
+        <result property="organizationTypeId" column="organization_type_id"/>
+        <result property="organizationType" column="organization_type"/>
+        <result property="executorOfOrganizationId" column="executor_of_organization_id"/>
+        <result property="executorOfOrganization" column="executor_of_organization"/>
+        <result property="executorRole" column="executor_role"/>
+        <result property="productModelId" column="product_model_id"/>
+        <result property="approvalLevel" column="approval_level"/>
+        <result property="firstOrgTypeId" column="first_org_type_id"/>
+        <result property="firstApprovalRoleId" column="first_approval_role_id"/>
+        <result property="firstOrganizationId" column="first_organization_id"/>
+        <result property="firstOrganization" column="first_organization"/>
+        <result property="firstApprovalRole" column="first_approval_role"/>
+        <result property="secondOrgTypeId" column="second_org_type_id"/>
+        <result property="secondApprovalRoleId" column="second_approval_role_id"/>
+        <result property="secondOrganizationId" column="second_organization_id"/>
+        <result property="secondOrganization" column="second_organization"/>
+        <result property="secondApprovalRole" column="second_approval_role"/>
+        <result property="thirdOrgTypeId" column="third_org_type_id"/>
+        <result property="thirdApprovalRoleId" column="third_approval_role_id"/>
+        <result property="thirdOrganizationId" column="third_organization_id"/>
+        <result property="thirdOrganization" column="third_organization"/>
+        <result property="thirdApprovalRole" column="third_approval_role"/>
+        <result property="approvalState" column="approval_state"/>
+        <result property="isCheck" column="is_check"/>
+        <result property="acceptanceMethod" column="acceptance_method"/>
+        <result property="autoAcceptanceSettings" column="auto_acceptance_settings"/>
+        <result property="enableCheme" column="enable_cheme"/>
+        <result property="effectiveDate" column="effective_date"/>
+        <result property="termOfValidity" column="term_of_validity"/>
+        <result property="modifiedBy" column="Modified_by"/>
+        <result property="modifiedDate" column="Modified_date"/>
+        <result property="isDel" column="is_del"/>
+        <result property="schemeExtendInfo" column="scheme_extend_info"/>
+        <result property="accepterOrgTypeId" column="accepter_org_type_id"/>
+        <result property="accepterOrgId" column="accepter_org_id"/>
+        <result property="accepterRoleId" column="accepter_role_id"/>
+        <result property="executorRoleId" column="executor_role_id"/>
+        <result property="accepterOrg" column="accepter_org"/>
+        <result property="accepterRole" column="accepter_role"/>
+        <result property="executorRole" column="executor_role"/>
+    </resultMap>
+
+    <select id="findPage" resultMap="operationSchemeDtoMap">
+        SELECT
+            t1.id,
+            scheme_name,
+            operation_type,
+            scheme_description,
+            creator,
+            create_date,
+            scheme_lllustration,
+            scheme_group_id ,
+            organization_type ,
+            t2.`name` AS executor_of_organization,
+            '' AS product_model,
+            approval_level AS approval_level,
+            t4.`name` AS first_approval_role,
+            is_check ,
+            acceptance_method,
+            auto_acceptance_settings,
+            enable_cheme,
+            effective_date,
+            term_of_validity,
+            Modified_by,
+            Modified_date,
+            is_del,
+            scheme_extend_info,
+            organization_type_id,
+            executor_of_organization_id,
+            '' AS product_model_id,
+            first_approval_role_id ,
+            second_approval_role_id,
+            t5.`name` AS second_approval_role,
+            third_approval_role_id,
+            t6.`name` AS third_approval_role,
+            approval_state,
+            first_organization_id,
+            second_organization_id,
+            third_organization_id,
+            second_org_type_id,
+            first_org_type_id,
+            third_org_type_id,
+            executor_role_id,
+            accepter_org_type_id,
+            accepter_org_id,
+            accepter_role_id,
+            t7.`name` as first_organization,
+            t8.`name` as second_organization,
+            t9.`name` as third_organization,
+            t11.`name` as accepter_org,
+            t10.`name` as executor_role,
+            t12.`name` as accepter_role
+        FROM
+            t_operation_scheme t1
+                LEFT JOIN t_org t2 ON t1.executor_of_organization_id = t2.id
+                LEFT JOIN t_device_model t3 ON t3.id = t1.product_model_id
+                LEFT JOIN t_role t4 ON t1.first_approval_role_id = t4.id
+                LEFT JOIN t_role t5 ON t1.second_approval_role_id = t5.id
+                LEFT JOIN t_role t6 ON t1.third_approval_role_id = t6.id
+                LEFT JOIN t_org t7 ON t1.first_organization_id = t7.id
+                LEFT JOIN t_org t8 ON t1.second_organization_id = t8.id
+                LEFT JOIN t_org t9 ON t1.third_organization_id = t9.id
+                LEFT JOIN t_role t10 ON t1.executor_role_id = t10.id
+                LEFT JOIN t_org t11 ON t1.accepter_org_id = t11.id
+                LEFT JOIN t_role t12 ON t1.accepter_role_id = t12.id
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

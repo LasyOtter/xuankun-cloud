@@ -1,0 +1,30 @@
+package com.xuankun.workorder.rules
+
+import com.xuankun.workorder.dto.PersonDTO;
+import com.xuankun.workorder.actions.PersonRuleAction;
+
+// 根据名字匹配指定的人
+rule "1.find target person"
+    when
+        $p : PersonDTO( name == "bob" )
+    then
+        PersonRuleAction.doParse($p, drools.getRule());
+        System.out.println("Rule name is [" + drools.getRule().getName() + "]");
+        System.out.println("Rule package is [" + drools.getRule().getPackageName() + "]");
+end
+
+// 根据年龄匹配找到打工人
+rule "2.find the work person"
+    when
+        $p : PersonDTO( age >= 25 && age < 65 )
+    then
+        System.out.println( $p + " is a work person!" );
+end
+
+// 根据年龄和名字匹配找到打工人
+rule "3.find the work person"
+    when
+        $p : PersonDTO( age >= 25 && age < 65 && name.contains("ji"))
+    then
+        System.out.println( $p + " is a work person!" );
+end
