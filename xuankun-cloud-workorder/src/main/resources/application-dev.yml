@@ -10,22 +10,17 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${nacos_host:192.168.1.116}:${nacos_port:8848}
+        server-addr: ${nacos_host:localhost}:${nacos_port:8848}
         # 命名空间，默认：public
         namespace: ${nacos_namespace:}
         service: ${spring.application.name}
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         namespace: ${spring.cloud.nacos.discovery.namespace}
-        file-extension: yaml
-        # 指定配置
-        extension-configs:
-          - data-id: datasource.yaml
-            refresh: true
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.1.116:3306/vxlinkdb_1.25?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+      url: jdbc:mysql://localhost:3306/xuankun_cloud?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
       username: root
       password: root
       initial-size: 10

@@ -47,7 +47,7 @@ spring:
     show-sql: true
     open-in-view: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         strategy: org.hibernate.cfg.DefaultComponentSafeNamingStrategy
     properties:

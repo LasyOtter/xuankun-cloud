@@ -33,6 +33,11 @@ spring:
           order: 3
           predicates:
             - Path=/message/**
+        - id: xuankun-cloud-workorder
+          uri: lb://xuankun-cloud-workorder
+          order: 4
+          predicates:
+            - Path=/workorder/**
           filters:
             - StripPrefix=1
         - id: xuankun-cloud-new
@@ -50,7 +55,7 @@ spring:
             - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
     nacos:
       discovery:
-        server-addr: ${nacos_host:192.168.1.116}:${nacos_port:8848}
+        server-addr: ${nacos_host:localhost}:${nacos_port:8848}
         # 命名空间，默认：public
         namespace: ${nacos_namespace:}
         service: ${spring.application.name}

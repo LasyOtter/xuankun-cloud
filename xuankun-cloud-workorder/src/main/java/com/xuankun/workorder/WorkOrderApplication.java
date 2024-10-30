@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 2022/9/15:9:23
  */
 @EnableTransactionManagement
+@EnableDiscoveryClient
 @SpringBootApplication
 public class WorkOrderApplication extends SpringBootServletInitializer {
 
