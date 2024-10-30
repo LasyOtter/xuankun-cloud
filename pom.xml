@@ -8,7 +8,6 @@
 
     <name>xuankun-cloud</name>
     <description>XuanKubCloud</description>
-    <url>https://www.xuankun.com</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
