@@ -20,7 +20,6 @@
 	    <module>xuankun-cloud-framework</module>
 		<module>xuankun-cloud-api</module>
 		<module>xuankun-cloud-module</module>
-		<module>xuankun-cloud-new</module>
 		<module>xuankun-cloud-system</module>
         <module>xuankun-cloud-gateway</module>
         <module>xuankun-cloud-workorder</module>
