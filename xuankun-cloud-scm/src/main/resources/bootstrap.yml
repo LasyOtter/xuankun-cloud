@@ -1,0 +1,48 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: xuankun-cloud-scm
+  flyway:
+    enabled: true
+    encoding: UTF-8
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos_host:localhost}:${nacos_port:8848}
+        # 命名空间，默认：public
+        namespace: ${nacos_namespace:}
+        service: ${spring.application.name}
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xuankun_cloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+    username: root
+    password: root
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 5
+      auto-commit: true
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+storage:
+  enabled: true
+  config:
+    # 存储类型：local、aliyun
+    type: local
+    # 访问域名
+    domain: http://localhost:8080/sys
+    # 配置访问前缀
+    prefix:
+  local:
+    # 本地上传路径
+    path: D://upload
