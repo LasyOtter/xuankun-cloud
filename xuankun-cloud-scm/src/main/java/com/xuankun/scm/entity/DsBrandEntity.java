@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @ApiModel(value = "品牌表",description = "")
 @EqualsAndHashCode(callSuper = false)
-@TableName("LE_ds_brand")
+@TableName("ds_brand")
 public class DsBrandEntity extends BaseEntity implements Serializable,Cloneable{
 
     /** 品牌代码 */

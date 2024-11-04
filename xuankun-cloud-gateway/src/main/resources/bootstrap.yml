@@ -40,11 +40,11 @@ spring:
             - Path=/workorder/**
           filters:
             - StripPrefix=1
-        - id: xuankun-cloud-new
-          uri: lb://xuankun-cloud-new
-          order: 999
+        - id: xuankun-cloud-generator
+          uri: lb://xuankun-cloud-generator
+          order: 5
           predicates:
-            - Path=/new/**
+            - Path=/generator/**
           filters:
             - StripPrefix=1
         - id: openapi

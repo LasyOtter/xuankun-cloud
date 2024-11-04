@@ -13,6 +13,7 @@
 		<module>xuankun-cloud-message</module>
 		<module>xuankun-cloud-flowable</module>
 		<module>xuankun-cloud-file</module>
+		<module>xuankun-cloud-generator</module>
     </modules>
 
 	
